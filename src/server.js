@@ -19,6 +19,20 @@ const create = async () => {
         res.end();
     });
 
+    // liveness check
+    app.get('/live', (req, res) => {
+        res.status(200).json({ status: 'ok' });
+    });
+
+    // readiness check
+    app.get('/ready', async (req, res) => {
+     try {
+        res.status(200).json({ status: 'ready' });
+     } catch (error) {
+	res.status(503).json({ status: 'not ready', error: error.message });
+     }
+    });
+
     // root route - serve static file
     app.get('/', (req, res) => {
         return res.sendFile(path.join(__dirname, '../public/client.html'));
