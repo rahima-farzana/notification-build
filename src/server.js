@@ -1,7 +1,9 @@
 const express = require('express');
+const client = require('prom-client');
 const favicon = require('serve-favicon');
 const path = require('path');
 const utils = require('./utils');
+
 
 // fn to create express server
 const create = async () => {
@@ -31,6 +33,12 @@ const create = async () => {
      } catch (error) {
 	res.status(503).json({ status: 'not ready', error: error.message });
      }
+    });
+
+    client.collectDefaultMetrics();
+    app.get('/metrics', async (req, res) => {
+      res.set("Content-Type", client.register.contentType);
+      res.end(await client.register.metrics());
     });
 
     // root route - serve static file
