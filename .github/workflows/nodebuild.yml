@@ -92,6 +92,7 @@ jobs:
             -Dsonar.host.url=https://sonarcloud.io \
             -Dsonar.token=$SONAR_TOKEN \
             -Dsonar.sources=. \
+            -Dsonar.exclusions=node_modules/**,coverage/**,public/**
             -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info \
             -Dsonar.branch.name=${{ github.ref_name }} \
             -Dsonar.qualitygate.wait=true #For quality gate          
