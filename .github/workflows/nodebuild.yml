@@ -6,22 +6,22 @@ on:
   pull_request: 
     branches: main
 
-workflow_dispatch:
-  inputs:
-    ECRURL:
-      description: "ECR Registry URL"
-      required: true
-      default: "081654307023.dkr.ecr.ap-south-1.amazonaws.com"
+  workflow_dispatch:
+    inputs:
+      ECRURL:
+        description: "ECR Registry URL"
+        required: true
+        default: "081654307023.dkr.ecr.ap-south-1.amazonaws.com"
 
-    APPREPO:
-      description: "Docker Repo Name"
-      required: true
-      default: "wezvatechfrontend"
+      APPREPO:
+        description: "Docker Repo Name"
+        required: true
+        default: "wezvatechfrontend"
 
-    REGION:
-      description: "AWS Region"
-      required: true
-      default: "ap-south-1"         
+      REGION:
+        description: "AWS Region"
+        required: true
+        default: "ap-south-1"         
 
 jobs:
   build-and-scan:
