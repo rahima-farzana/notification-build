@@ -1,0 +1,98 @@
+name: node build and scan
+
+on:
+  push:
+    branches: develop
+  pull_request: 
+    branches:
+      - branches: main
+
+workflow_dispatch:
+  inputs:
+    ECRURL:
+      description: "ECR Registry URL"
+      required: true
+      default: "081654307023.dkr.ecr.ap-south-1.amazonaws.com"
+
+    APPREPO:
+      description: "Docker Repo Name"
+      required: true
+      default: "wezvatechfrontend"
+
+    REGION:
+      description: "AWS Region"
+      required: true
+      default: "ap-south-1"         
+
+jobs:
+  build-and-scan:
+    runs-on: ubuntu-latest
+
+    steps:
+      # -----------------------------
+      # Checkout Code
+      # -----------------------------
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify files
+        run: |
+          echo "Repository successfully checked out"
+          ls -R
+
+      # -----------------------------
+      # Build and unit test
+      # -----------------------------
+      - name: build
+        run: |
+          echo "Building Node Express ..."
+          npm install
+          npm install sonar-scanner
+          npm test
+
+      - name: Upload Test Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-report
+          path: junit.xml
+
+      # -----------------------------
+      # Trivy Dependency Check (SCA)
+      # -----------------------------
+      - name: Trivy FS Scan (SCA)
+        run: |
+          mkdir -p trivy-report
+
+          docker run --rm \
+            -v ${{ github.workspace }}:/project \
+            -v ${{ github.workspace }}/trivy-report:/report \
+            aquasec/trivy:0.50.0 \
+            fs /project \
+            --format json \
+            --output /report/trivy-report.json      
+
+      - name: Upload Trivy Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: trivy-report
+          path: ./trivy-report
+
+      # ---------------------
+      # SonarCloud SAST Scan
+      # ---------------------
+      - name: SonarCloud SAST Scan
+        if: github.ref == 'refs/heads/main'
+        env:
+          SONAR_TOKEN: ${{ secrets.scm }}
+        run: |
+          mvn sonar:sonar \
+            -Dsonar.projectKey=wezva-fintech_ledger-build \
+            -Dsonar.organization=wezva-fintech \
+            -Dsonar.host.url=https://sonarcloud.io \
+            -Dsonar.token=$SONAR_TOKEN \
+            -Dsonar.sources=. \
+            -Dsonar.branch.name=${{ github.ref_name }} \
+            -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info \
+            -Dsonar.qualitygate.wait=true #For quality gate          
