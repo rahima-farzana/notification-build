@@ -93,5 +93,5 @@ jobs:
             -Dsonar.token=$SONAR_TOKEN \
             -Dsonar.sources=. \
             -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info \
-            -Dsonar.branch.name=${{ github.ref_name }}
+            -Dsonar.branch.name=${{ github.ref_name }} \
             -Dsonar.qualitygate.wait=true #For quality gate          
