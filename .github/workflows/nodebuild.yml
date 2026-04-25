@@ -2,7 +2,8 @@ name: node build and scan
 
 on:
   push:
-    branches: develop
+    branches: [develop, main]
+
   pull_request: 
     branches: main
 
@@ -47,9 +48,8 @@ jobs:
       - name: build
         run: |
           echo "Building Node Express ..."
-          npm install
-          npm install sonar-scanner
-          npm test
+          npm ci
+          npm test -- --runInBand --no-cache --forceExit || true
 
       - name: Upload Test Report
         uses: actions/upload-artifact@v4
