@@ -86,12 +86,12 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.scm }}
         run: |
-          mvn sonar:sonar \
-            -Dsonar.projectKey=wezva-fintech_ledger-build \
+          npx sonar-scanner \
+            -Dsonar.projectKey=wezva-fintech_notification-build \
             -Dsonar.organization=wezva-fintech \
             -Dsonar.host.url=https://sonarcloud.io \
             -Dsonar.token=$SONAR_TOKEN \
             -Dsonar.sources=. \
-            -Dsonar.branch.name=${{ github.ref_name }} \
             -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info \
+            -Dsonar.branch.name=${{ github.ref_name }}
             -Dsonar.qualitygate.wait=true #For quality gate          
