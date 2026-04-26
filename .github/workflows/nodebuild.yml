@@ -45,6 +45,14 @@ jobs:
       # -----------------------------
       # Build and unit test
       # -----------------------------
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Check Node version
+        run: node -v
+      
       - name: build
         run: |
           echo "Building Node Express ..."
