@@ -108,4 +108,35 @@ jobs:
             -Dsonar.exclusions=node_modules/**,public/** \
             -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info \
             -Dsonar.branch.name=${{ github.ref_name }} \
-            -Dsonar.qualitygate.wait=true #For quality gate        
+            -Dsonar.qualitygate.wait=true #For quality gate
+
+      # -----------------------------
+      # Configure AWS Credentials
+      # -----------------------------     
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ inputs.REGION || 'ap-south-1' }}
+
+      # -----------------------------
+      # Login to Amazon ECR
+      # -----------------------------
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2 
+
+      # -----------------------------
+      # Build & Push Docker Image
+      # ----------------------------- 
+      - name: Build and Push Docker Image
+        env:
+          ECR_REGISTRY: ${{ inputs.ECRURL || '081654307023.dkr.ecr.ap-south-1.amazonaws.com' }}
+          REPOSITORY: ${{ inputs.APPREPO || 'wezvatechfrontend' }}
+          IMAGE_TAG: fb${{ github.run_number }}
+        run: |
+          echo "Building Docker Image..."
+          docker build -t $ECR_REGISTRY/$REPOSITORY:$IMAGE_TAG .
+          echo "Pushing Docker Image..."
+          docker push $ECR_REGISTRY/$REPOSITORY:$IMAGE_TAG
