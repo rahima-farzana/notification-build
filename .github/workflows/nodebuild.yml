@@ -210,3 +210,30 @@ jobs:
           else
             echo "✅ No vulnerabilities"
           fi
+
+  # -----------------------------
+  # Trigger CD Job
+  # -----------------------------
+  trigger-cd-pipeline:
+    runs-on: ubuntu-latest
+    needs: build-and-scan
+    if: ${{ success() && github.ref == 'refs/heads/main' }}
+
+    steps:
+      - name: Trigger CD Pipeline
+        run: |
+          IMAGE_TAG="fb${{ github.run_number }}"
+
+          curl -X POST \
+          -H "Authorization: Bearer ${{ secrets.GH_PAT }}" \
+          -H "Accept: application/vnd.github+json" \
+          https://api.github.com/repos/wezva-fintech/notification-deployment/actions/workflows/deploy.yml/dispatches \
+          -d "{
+            \"ref\":\"main\",
+            \"inputs\": {
+              \"ECRURL\": \"${{ inputs.ECRURL }}/\",
+              \"REPO\": \"${{ inputs.APPREPO }}\",
+              \"IMAGE\": \"$IMAGE_TAG\",
+              \"TEST\": \"functional\"
+            }
+          }"
