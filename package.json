@@ -13,8 +13,12 @@
     "build": "npm run lint",
     "start": "node src/index.js",
     "start:dev": "npm run lint && nodemon --exec node src/index.js --unhandled-rejections=warn",
-    "test": "jest --coverage --runInBand --no-cache --forceExit --reporters=default --reporters=jest-junit",
+    "test": "jest --coverage --runInBand --no-cache --reporters=default --reporters=jest-junit",
     "lint": "eslint src/**/*.js --fix"
+  },
+  "jest": {
+    "setupFiles": ["./jest.setup.js"],
+    "testEnvironment": "node"
   },
   "repository": {
     "type": "git",
