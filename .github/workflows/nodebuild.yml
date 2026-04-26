@@ -49,7 +49,7 @@ jobs:
         run: |
           echo "Building Node Express ..."
           npm ci
-          npm test -- --coverage --runInBand --no-cache --forceExit
+          npm test -- --coverage --runInBand --no-cache
 
       - name: Check coverage
         run: |
