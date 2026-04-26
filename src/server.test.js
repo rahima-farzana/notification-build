@@ -41,4 +41,33 @@ describe('root', () => {
         expect(res.text).toContain(`Cannot GET ${invalidPath}`);
     });
 
+    it('request /live, returns 200', async () => {
+    const app = await create();
+
+    const res = await request(app)
+        .get('/live')
+        .expect(200);
+
+    expect(res.body).toEqual({ status: 'ok' });
+    });
+
+    it('request /ready, returns 200', async () => {
+    const app = await create();
+
+    const res = await request(app)
+        .get('/ready')
+        .expect(200);
+
+    expect(res.body).toEqual({ status: 'ready' });
+    });
+
+    it('request /metrics, returns metrics', async () => {
+    const app = await create();
+
+    const res = await request(app)
+        .get('/metrics')
+        .expect(200);
+
+    expect(res.text).toContain('process_cpu');
+    });
 });
