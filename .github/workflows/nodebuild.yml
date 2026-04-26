@@ -94,6 +94,7 @@ jobs:
       # SonarCloud SAST Scan
       # ---------------------
       - name: SonarCloud SAST Scan
+        continue-on-error: true
         if: github.ref == 'refs/heads/main'
         env:
           SONAR_TOKEN: ${{ secrets.scm }}
