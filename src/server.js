@@ -37,9 +37,9 @@ const create = async () => {
     });
 
     // ✅ Initialize Prometheus metrics only once
-    if (!metricsInitialized) {
-        client.collectDefaultMetrics();
-        metricsInitialized = true;
+    if (!metricsInitialized || client.register.getMetricsAsArray().length === 0) {
+    client.collectDefaultMetrics();
+    metricsInitialized = true;
     }
 
     // metrics endpoint
