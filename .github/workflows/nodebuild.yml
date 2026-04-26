@@ -199,7 +199,6 @@ jobs:
       # Quality Gate for Image
       # ----------------------   
       - name: Enforce Security Gate (Ignore Failures)
-        continue-on-error: true # ----------> Because here we have high & critical Vulnerability
         run: |
           CRITICAL=${{ steps.scan.outputs.critical }}
           HIGH=${{ steps.scan.outputs.high }}
