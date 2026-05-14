@@ -17,7 +17,7 @@ on:
       APPREPO:
         description: "Docker Repo Name"
         required: true
-        default: "wezvatechfrontend"
+        default: "wezvatechnotification"
 
       REGION:
         description: "AWS Region"
@@ -133,7 +133,7 @@ jobs:
       - name: Build and Push Docker Image
         env:
           ECR_REGISTRY: ${{ inputs.ECRURL || '081654307023.dkr.ecr.ap-south-1.amazonaws.com' }}
-          REPOSITORY: ${{ inputs.APPREPO || 'wezvatechfrontend' }}
+          REPOSITORY: ${{ inputs.APPREPO || 'wezvatechnotification' }}
           IMAGE_TAG: fb${{ github.run_number }}
         run: |
           echo "Building Docker Image..."
@@ -148,7 +148,7 @@ jobs:
         run: |
           for i in {1..12}; do
             STATUS=$(aws ecr describe-image-scan-findings \
-              --repository-name ${{ inputs.APPREPO || 'wezvatechfrontend' }} \
+              --repository-name ${{ inputs.APPREPO || 'wezvatechnotification' }} \
               --image-id imageTag=fb${{ github.run_number }} \
               --query 'imageScanStatus.status' \
               --output text 2>/dev/null || echo "NOT_FOUND")
@@ -178,13 +178,13 @@ jobs:
         id: scan
         run: |
           CRITICAL=$(aws ecr describe-image-scan-findings \
-            --repository-name ${{ inputs.APPREPO || 'wezvatechfrontend' }} \
+            --repository-name ${{ inputs.APPREPO || 'wezvatechnotification' }} \
             --image-id imageTag=fb${{ github.run_number }} \
             --query 'imageScanFindings.findingSeverityCounts.CRITICAL' \
             --output text 2>/dev/null || echo 0)
 
           HIGH=$(aws ecr describe-image-scan-findings \
-            --repository-name ${{ inputs.APPREPO || 'wezvatechfrontend' }} \
+            --repository-name ${{ inputs.APPREPO || 'wezvatechnotification' }} \
             --image-id imageTag=fb${{ github.run_number }} \
             --query 'imageScanFindings.findingSeverityCounts.HIGH' \
             --output text 2>/dev/null || echo 0)
