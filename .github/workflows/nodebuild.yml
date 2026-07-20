@@ -104,7 +104,7 @@ jobs:
             -Dsonar.projectKey=wezva-fintech_notification-build \
             -Dsonar.organization=wezva-fintech \
             -Dsonar.host.url=https://sonarcloud.io \
-            -Dsonar.token=$SONAR_TOKEN \
+            -Dsonar.token=$SONARQUBE_TOKEN \
             -Dsonar.sources=src \
             -Dsonar.exclusions=node_modules/**,public/** \
             -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info \
