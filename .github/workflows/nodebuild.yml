@@ -13,7 +13,7 @@ on:
       ECRURL:
         description: "ECR Registry URL"
         required: true
-        default: "081654307023.dkr.ecr.ap-south-1.amazonaws.com"
+        default: "967598289293.dkr.ecr.ap-south-1.amazonaws.com"
 
       APPREPO:
         description: "Docker Repo Name"
